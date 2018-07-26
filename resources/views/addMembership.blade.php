@@ -1,7 +1,7 @@
 @extends('layouts.adminLayout')
 @section('content')
-<form id="form" style="margin: 20px;" action="{{ route('addMembership',['id' => $id]) }}" method="post"
-      enctype="multipart/form-data">
+
+<form id="form" style="margin: 20px;" action="{{ route('addMembership',['id' => $id]) }}" method="post" enctype="multipart/form-data">
     {{ csrf_field() }}
     <div class="col-md-12">
         <div class="form-group col-md-4">

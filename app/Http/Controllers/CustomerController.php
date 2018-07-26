@@ -39,6 +39,9 @@ class CustomerController extends Controller
         $orderItem->itemID = $id;
         $orderItem->save();
         return redirect('shop');
+    }
 
+    public function newAddress(){
+        return redirect('newAddress');
     }
 }

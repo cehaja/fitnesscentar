@@ -5,34 +5,34 @@
     <form id="form" style="margin: 20px;" action="{{ route('addWorker') }}" method="post" enctype="multipart/form-data">
         {{ csrf_field() }}
 
-        <div class="form-group col-md-6">
+        <div class="form-group ">
             <label for="firstName">First name</label>
-            <input type="text" class="form-control col-sm-2" id="firstName" name="firstName" placeholder="Enter first name">
+            <input type="text" class="form-control col-md-6" id="firstName" name="firstName" placeholder="Enter first name">
         </div>
 
-        <div class="form-group col-md-6">
+        <div class="form-group">
             <label for="lastName">Last name</label>
-            <input type="text" class="form-control col-sm-2" id="lastName" name="lastName" placeholder="Enter last name">
+            <input type="text" class="form-control col-md-6" id="lastName" name="lastName" placeholder="Enter last name">
         </div>
 
         <div class="form-group">
             <label for="Birth date">Birth date</label>
-            <input type="date" class="form-control col-sm-2" id="birthDate" name="birthDate" placeholder="Enter birth date">
+            <input type="date" class="form-control col-md-6" id="birthDate" name="birthDate" placeholder="Enter birth date">
         </div>
 
-        <div class="form-group col-md-6">
+        <div class="form-group ">
             <label for="email">Email</label>
-            <input type="email" class="form-control col-sm-2" id="email" name="email" placeholder="Enter email">
+            <input type="email" class="form-control col-md-6" id="email" name="email" placeholder="Enter email">
         </div>
 
-        <div class="form-group col-md-6">
+        <div class="form-group ">
             <label for="password">Password</label>
-            <input type="password" class="form-control col-sm-2" id="password" name="password" placeholder="Enter password">
+            <input type="password" class="form-control col-md-6" id="password" name="password" placeholder="Enter password">
         </div>
 
         <div class="form-group">
             <label for="address">Address</label>
-            <input type="text" class="form-control" id="address" name="address" placeholder="Enter address">
+            <input type="text" class="form-control col-md-6" id="address" name="address" placeholder="Enter address">
         </div>
 
         <div class="form-row">

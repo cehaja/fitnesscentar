@@ -284,4 +284,102 @@ class AdminController extends Controller
         $attendance->save();
         return redirect('attendance');
     }
+
+    public function activeMemberships(){
+        $time = new DateTime();
+        $date = $time->format('Y-m-d');
+        $memberships = Membership::where('endDate','>',$date)->get();
+        $active = array();
+        foreach ($memberships as $membership){
+            $user = User::find($membership->userID);
+            $type = MembershipType::find($membership->typeID);
+            $active[] = array('user'=>$user->firstName.' '.$user->lastName , 'type' => $type->name, 'startDate' => $membership->startDate,'endDate'=>$membership->endDate);
+        }
+        return view('activeMemberships',['actives' => $active]);
+    }
+
+    public function membershipTypes(){
+        $types = MembershipType::all();
+        return view('membershipTypes',['types'=>$types]);
+    }
+
+    public function editMembershipType($id){
+        $type = MembershipType::find($id);
+        return view('editMembershipType',['type' => $type]);
+    }
+
+    public function saveEditMembershipType(Request $request,$id){
+        $type = MembershipType::find($id);
+        $type->name = $request->name;
+        $type->price = $request->price;
+        $type->save();
+        return redirect('membershipTypes');
+    }
+
+    public function allEmployees(){
+        $employees = User::where('type','employee')->get();
+        return view('employees',['employees' => $employees]);
+    }
+
+    public function editEmployee($id){
+        $employee = User::find($id);
+        return view('editEmployee',['employee' => $employee]);
+    }
+
+    public function saveEditEmployee(Request $request,$id){
+        $employee = User::find($id);
+        $employee->firstName = $request->firstName;
+        $employee->lastname = $request->lastName;
+        $employee->birthDate = $request->birthDate;
+        $employee->email = $request->email;
+        $employee->save();
+        return redirect('employees');
+    }
+
+    public function deleteEmployee($id){
+        $employee = User::find($id);
+        $employee->delete();
+        return redirect('employees');
+    }
+
+    public function addCategory(){
+        return view('addCategory');
+    }
+
+    public function allCategories(){
+        $categories = Category::all();
+        $categoriesData = array();
+        foreach ($categories as $category){
+            $subcategories = Subcategory::where('categoryID',$category->id)->get();
+            $subcategoriesData = ' ';
+            foreach ($subcategories as $subcategory){
+                $subcategoriesData .= $subcategory->name.', ';
+            }
+            $categoriesData[] = array('id' => $category->id,'category' => $category->name, 'subcategories' => $subcategoriesData);
+        }
+        return view('categories',['categories' => $categoriesData]);
+    }
+
+    public function saveCategory(Request $request){
+        $category = new Category();
+        $category->name = $request->name;
+        $category->save();
+        return view('addSubcategory',['id' => $category->id]);
+    }
+
+    public function addSubcategory($id){
+        return view('addSubcategory',['id' => $id]);
+    }
+
+    public function saveSubcategory(Request $request,$id){
+        $subcategory = new Subcategory();
+        $subcategory->categoryID = $id;
+        $subcategory->name = $request->name;
+        $subcategory->save();
+        if ($request->check == 1){
+            return view('addSubcategory',['id' => $id]);
+        }
+        return redirect('categories');
+    }
+
 }
