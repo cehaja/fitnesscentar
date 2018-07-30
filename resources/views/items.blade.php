@@ -15,7 +15,7 @@
         <tbody>
         @foreach($itemsData as $item)
             <tr>
-                <td><img src="{{asset('storage/itemImages/'.$item['image'])}}" style="height: 75px; height: 75px;"></td>
+                <td><img src="{{asset('storage/itemImages/'.$item['image'])}}" style="height: 75px;"></td>
                 <td>{{$item['name']}}</td>
                 <td>{{$item['price']}}</td>
                 <td>{{$item['category'].'( '.$item['subcategory'].' )'}}</td>

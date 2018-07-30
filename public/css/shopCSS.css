@@ -1,0 +1,25 @@
+.itemContainer{
+    display: inline-block;
+    height: 300px;
+    width: 300px;
+    margin: 50px;
+    border: gray 4px solid;
+    border-radius: 20px;
+}
+.itemImage{
+    display: block;
+    height: 150px;
+    width: 150px;
+    margin-top: 10px;
+    margin-right: auto;
+    margin-left: auto;
+}
+.itemName, .itemPrice{
+    font-weight: bold;
+    text-align: center;
+}
+.orderButton{
+    position: relative;
+    left: 90px;
+    text-align: center;
+}

@@ -1,23 +1,13 @@
-@extends('layouts.adminLayout')
+@extends('layouts.mainLayout')
+<link href="{{asset('css/shopCSS.css')}}" rel="stylesheet" type="text/css">
 @section('content')
-    <table class="table">
-        <thead class="thead-dark">
-        <tr>
-            <th class="col">Image</th>
-            <th scope="col">Name</th>
-            <th scope="col">Price</th>
-            <th scope="col"></th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach($items as $item)
-            <tr>
-                <td><img src="{{asset('storage/itemImages/'.$item->image)}}" style="height: 75px; height: 75px;"></td>
-                <td>{{$item->name}}</td>
-                <td>{{$item->price}}</td>
-                <td><a href="{{route('orderItem',['id' => $item->id])}}">Order</a></td>
-            </tr>
-        @endforeach
-        </tbody>
-    </table>
+    @foreach($items as $item)
+                <div class="itemContainer">
+                    <img class="itemImage" src="{{asset('storage/itemImages/'.$item->image)}}">
+                    <p class="itemName">{{$item->name}}</p>
+                    <p class="itemPrice">{{$item->price.' €'}}</p>
+                    <a class="btn btn-primary" href="{{route('itemDetails',['id' => $item->id])}}">Details</a>
+                    <a class="btn btn-primary orderButton" href="{{route('orderItemG',['id' => $item->id])}}">Add to cart</a>
+                </div>
+    @endforeach
 @endsection

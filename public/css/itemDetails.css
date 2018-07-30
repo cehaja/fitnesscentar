@@ -1,0 +1,12 @@
+#itemName{
+    font-size: 50px;
+    font-weight: bold;
+}
+#itemPrice{
+    font-size: 40px;
+    font-weight: bold;
+}
+#itemCategory, #itemManufacturer, #itemDescription{
+    font-size: 25px;
+}
+

@@ -56,4 +56,8 @@ Route::group(['middleware' => '\App\Http\Middleware\AdminMiddleware'], function(
 
 });
 Route::get('shop','CustomerController@showItemsInShop')->name('shop');
-Route::get('orderItem/{id}','CustomerController@orderItem')->name('orderItem');
+Route::post('orderItem','CustomerController@orderItemP')->name('orderItemP');
+Route::get('orderItem/{id}','CustomerController@orderItemG')->name('orderItemG');
+Route::get('itemDetails/{id}','CustomerController@itemDetails')->name('itemDetails');
+Route::get('test','CustomerController@test')->name('test');
+Route::get('order','CustomerController@currentOrder')->name('currentOrder');
