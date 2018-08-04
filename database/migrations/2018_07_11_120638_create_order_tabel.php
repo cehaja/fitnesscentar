@@ -20,6 +20,8 @@ class CreateOrderTabel extends Migration
             $table->float('deliveryDate')->nullable();
             $table->unsignedInteger('userID');
             $table->foreign('userID')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedInteger('addressID')->nullable();
+            $table->foreign('addressID')->references('id')->on('addresses')->onDelete('cascade');
             $table->timestamps();
         });
     }

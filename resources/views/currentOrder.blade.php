@@ -31,6 +31,7 @@
             </tbody>
         </table>
         <h5>Total: <h5 id="price"></h5></h5>
+        <a href="{{route('chooseAddress')}}">Complete order</a>
         <script src="{{asset('js/currentOrder.js')}}"></script>
     @endif
 

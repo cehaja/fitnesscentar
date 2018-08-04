@@ -19,6 +19,9 @@ class EmployeeMiddleware
         {
             return redirect('home');
         }
+        else if (!$request->user()){
+            return redirect('login');
+        }
         return $next($request);
     }
 }

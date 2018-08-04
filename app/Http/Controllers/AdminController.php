@@ -9,6 +9,9 @@ use App\Country;
 use App\Item;
 use App\Membership;
 use App\MembershipType;
+use App\Rules\LettersOnly;
+use App\Rules\MembershipStartDateRule;
+use App\Rules\StartDateRule;
 use App\Subcategory;
 use App\User;
 use DateTime;
@@ -62,6 +65,17 @@ class AdminController extends Controller
 
     public function saveItem(Request $request)
     {
+        $request->validate([
+            'name' => 'required|string|min:3|max:25',
+            'price' => 'required|numeric|gte:0',
+            'manufacturer' => 'required|string|min:3|max:40',
+            'size' => 'string',
+            'description' => 'required|string',
+            'category' => 'exists:categories,id',
+            'subcategory' => 'exists:subcategories,id',
+            'image' => 'required|image'
+        ]);
+
         $item = new Item();
         $item->name = $request->input('name');
         $item->price = $request->input('price');
@@ -86,6 +100,17 @@ class AdminController extends Controller
 
     public function saveWorker(Request $request)
     {
+        $request->validate([
+            'firstName' => ['required', 'string', 'min:3', 'max:25', new LettersOnly()],
+            'lastName' => ['required', 'string', 'min:3', 'max:25', new LettersOnly()],
+            'birthDate' => 'required|date|before:today',
+            'email' => 'required|email|unique:users',
+            'address' => 'required|string|min:3|max:50',
+            'city' => 'required|string|min:3|max:50',
+            'zip' => 'numeric|required',
+            'country' => 'required|exists:countries,id'
+        ]);
+
         $user = new User();
         $user->firstName = $request->input('firstName');
         $user->lastName = $request->input('lastName');
@@ -112,6 +137,11 @@ class AdminController extends Controller
 
     public function saveMembershipType(Request $request)
     {
+        $request->validate([
+            'name' => ['required', 'string', 'unique:memberships', 'min:3', 'max 20', new LettersOnly()],
+            'price' => 'digit|numeric|gte:0'
+        ]);
+
         $type = new MembershipType();
         $type->name = $request->input('name');
         $type->price = $request->input('price');
@@ -127,6 +157,16 @@ class AdminController extends Controller
 
     public function saveMember(Request $request)
     {
+        $request->validate([
+            'firstName' => ['required', 'string', 'min:3', 'max:30', new LettersOnly()],
+            'lastName' => ['required', 'string', 'min:3', 'max:30', new LettersOnly()],
+            'birthDate' => 'required|date|before:today',
+            'email' => 'email|unique:users',
+            'membershipCardNumber' => 'required|digits:8|unique:users',
+            'startDate' => ['required', 'date', 'after_or_equal:today'],
+            'endDate' => ['required', 'date', 'after:startDate']
+        ]);
+
         $user = new User();
         $user->firstName = $request->input('firstName');
         $user->lastName = $request->input('lastName');
@@ -169,6 +209,13 @@ class AdminController extends Controller
 
     public function updateMember(Request $request, $id)
     {
+        $request->validate([
+            'firstName' => ['required', 'string', 'min:3', 'max:30', new LettersOnly()],
+            'lastName' => ['required', 'string', 'min:3', 'max:30', new LettersOnly()],
+            'birthDate' => 'required|date|before:today',
+            'email' => 'email|unique:users',
+            'membershipCardNumber' => 'required|digits:8|unique:users',
+        ]);
         $member = User::find($id);
         $member->firstName = $request->input('firstName');
         $member->lastName = $request->input('lastName');
@@ -194,6 +241,12 @@ class AdminController extends Controller
 
     public function saveMembership($id, Request $request)
     {
+        $request->validate([
+            'startDate' => ['required', 'date', new MembershipStartDateRule($id)],
+            'endDate' => 'required|date|after:startDate',
+            'type' => 'exists:membership_types,id'
+        ]);
+
         $membership = new Membership();
         $membership->userID = $id;
         $membership->typeID = $request->input('type');
@@ -233,6 +286,16 @@ class AdminController extends Controller
 
     public function updateItem(Request $request, $id)
     {
+        $request->validate([
+            'name' => 'required|string|min:3|max:25',
+            'price' => 'numeric|gte:0|required',
+            'manufacturer' => 'required|string|min:3|max:30',
+            'description' => 'required|string|min:3',
+            'category' => 'required|exists:categories,id',
+            'subcategory' => 'required|exists:subcategories:id',
+            'image' => 'required|image'
+        ]);
+
         $item = Item::find($id);
         $item->name = $request->input('name');
         $item->price = $request->input('price');
@@ -256,22 +319,28 @@ class AdminController extends Controller
         return redirect('items');
     }
 
-    public function showAttendance(){
+    public function showAttendance()
+    {
         $attendances = Attendance::whereNull('exitTime')->get();
         $data = array();
-        foreach ($attendances as $attendance){
+        foreach ($attendances as $attendance) {
             $member = User::find($attendance->userID);
-            $data[] = array('id' => $attendance->id, 'user' => $member->firstName.' '.$member->lastName, 'arrivalTime' => $attendance->arrivalTime);
+            $data[] = array('id' => $attendance->id, 'user' => $member->firstName . ' ' . $member->lastName, 'arrivalTime' => $attendance->arrivalTime);
         }
-        return view('attendance',['data' => $data]);
+        return view('attendance', ['data' => $data]);
     }
 
-    public function addAttendance(Request $request){
+    public function addAttendance(Request $request)
+    {
+        $request->validate([
+            'cardNumber' => 'required|digits:8|exists:users,membershipCardNumber'
+        ]);
+
         $time = new DateTime();
         $attendances = Attendance::whereNull('exitTime')->get();
-        $member = User::where('membershipCardNumber',$request->input('cardNumber'))->get();
-        foreach ($attendances as $attendance){
-            if ($attendance->userID == $member[0]->id){
+        $member = User::where('membershipCardNumber', $request->input('cardNumber'))->get();
+        foreach ($attendances as $attendance) {
+            if ($attendance->userID == $member[0]->id) {
                 $attendance->exitTime = $time->format('H:i:s');
                 $attendance->save();
                 return redirect('attendance');
@@ -285,30 +354,37 @@ class AdminController extends Controller
         return redirect('attendance');
     }
 
-    public function activeMemberships(){
+    public function activeMemberships()
+    {
         $time = new DateTime();
         $date = $time->format('Y-m-d');
-        $memberships = Membership::where('endDate','>',$date)->get();
+        $memberships = Membership::where('endDate', '>', $date)->get();
         $active = array();
-        foreach ($memberships as $membership){
+        foreach ($memberships as $membership) {
             $user = User::find($membership->userID);
             $type = MembershipType::find($membership->typeID);
-            $active[] = array('user'=>$user->firstName.' '.$user->lastName , 'type' => $type->name, 'startDate' => $membership->startDate,'endDate'=>$membership->endDate);
+            $active[] = array('user' => $user->firstName . ' ' . $user->lastName, 'type' => $type->name, 'startDate' => $membership->startDate, 'endDate' => $membership->endDate);
         }
-        return view('activeMemberships',['actives' => $active]);
+        return view('activeMemberships', ['actives' => $active]);
     }
 
-    public function membershipTypes(){
+    public function membershipTypes()
+    {
         $types = MembershipType::all();
-        return view('membershipTypes',['types'=>$types]);
+        return view('membershipTypes', ['types' => $types]);
     }
 
-    public function editMembershipType($id){
+    public function editMembershipType($id)
+    {
         $type = MembershipType::find($id);
-        return view('editMembershipType',['type' => $type]);
+        return view('editMembershipType', ['type' => $type]);
     }
 
-    public function saveEditMembershipType(Request $request,$id){
+    public function saveEditMembershipType(Request $request, $id){
+        $request->validate([
+            'name' => ['required', 'string', 'unique:memberships', 'min:3', 'max 20', new LettersOnly()],
+            'price' => 'digit|numeric|gte:0'
+        ]);
         $type = MembershipType::find($id);
         $type->name = $request->name;
         $type->price = $request->price;
@@ -316,17 +392,31 @@ class AdminController extends Controller
         return redirect('membershipTypes');
     }
 
-    public function allEmployees(){
-        $employees = User::where('type','employee')->get();
-        return view('employees',['employees' => $employees]);
+    public function allEmployees()
+    {
+        $employees = User::where('type', 'employee')->get();
+        return view('employees', ['employees' => $employees]);
     }
 
-    public function editEmployee($id){
+    public function editEmployee($id)
+    {
         $employee = User::find($id);
-        return view('editEmployee',['employee' => $employee]);
+        return view('editEmployee', ['employee' => $employee]);
     }
 
-    public function saveEditEmployee(Request $request,$id){
+    public function saveEditEmployee(Request $request, $id)
+    {
+        $request->validate([
+            'firstName' => ['required', 'string', 'min:3', 'max:25', new LettersOnly()],
+            'lastName' => ['required', 'string', 'min:3', 'max:25', new LettersOnly()],
+            'birthDate' => 'required|date|before:today',
+            'email' => 'required|email|unique:users',
+            'address' => 'required|string|min:3|max:50',
+            'city' => 'required|string|min:3|max:50',
+            'zip' => 'numeric|required',
+            'country' => 'required|exists:countries,id'
+        ]);
+
         $employee = User::find($id);
         $employee->firstName = $request->firstName;
         $employee->lastname = $request->lastName;
@@ -346,38 +436,49 @@ class AdminController extends Controller
         return view('addCategory');
     }
 
-    public function allCategories(){
+    public function allCategories()
+    {
         $categories = Category::all();
         $categoriesData = array();
-        foreach ($categories as $category){
-            $subcategories = Subcategory::where('categoryID',$category->id)->get();
+        foreach ($categories as $category) {
+            $subcategories = Subcategory::where('categoryID', $category->id)->get();
             $subcategoriesData = ' ';
-            foreach ($subcategories as $subcategory){
-                $subcategoriesData .= $subcategory->name.', ';
+            foreach ($subcategories as $subcategory) {
+                $subcategoriesData .= $subcategory->name . ', ';
             }
-            $categoriesData[] = array('id' => $category->id,'category' => $category->name, 'subcategories' => $subcategoriesData);
+            $categoriesData[] = array('id' => $category->id, 'category' => $category->name, 'subcategories' => $subcategoriesData);
         }
-        return view('categories',['categories' => $categoriesData]);
+        return view('categories', ['categories' => $categoriesData]);
     }
 
-    public function saveCategory(Request $request){
+    public function saveCategory(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|min:3|string'
+        ]);
         $category = new Category();
         $category->name = $request->name;
         $category->save();
-        return view('addSubcategory',['id' => $category->id]);
+        return view('addSubcategory', ['id' => $category->id]);
     }
 
-    public function addSubcategory($id){
-        return view('addSubcategory',['id' => $id]);
+    public function addSubcategory($id)
+    {
+        return view('addSubcategory', ['id' => $id]);
     }
 
-    public function saveSubcategory(Request $request,$id){
+    public function saveSubcategory(Request $request, $id)
+    {
+        $request->validate([
+            'name' => ['string', 'required', 'min:3', 'unique:subcategories'],
+        ]);
+
         $subcategory = new Subcategory();
         $subcategory->categoryID = $id;
         $subcategory->name = $request->name;
         $subcategory->save();
-        if ($request->check == 1){
-            return view('addSubcategory',['id' => $id]);
+        if ($request->check == 1) {
+            return view('addSubcategory', ['id' => $id]);
         }
         return redirect('categories');
     }

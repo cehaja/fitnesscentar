@@ -23,11 +23,11 @@ class LoginController extends Controller
 
     protected function authenticated($request,$user)
     {
-        if ( $user->type == 'admin' ) {
+        if ( $user->type == 'admin' || $user->type == 'employee' ) {
             return redirect()->route('adminHome');
         }
 
-        return redirect('/home');
+        return redirect('/shop');
     }
 
 

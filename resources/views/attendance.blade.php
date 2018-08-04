@@ -1,12 +1,20 @@
 @extends('layouts.adminLayout')
 @section('content')
+    <link href="{{asset('css/error.css')}}" type="text/css" rel="stylesheet">
+    <div id="error">
+        <ul>
+            @foreach( $errors->all() as $error)
+                <li> {{$error}} </li>
+            @endforeach
+        </ul>
+    </div>
 
     <form id="form" action="{{route('attendance')}}" method="post" enctype="multipart/form-data">
         {{ csrf_field() }}
 
         <div class="form-group col-md-5">
             <label for="cardNumber">Card number</label>
-            <input type="number" class="form-control" id="cardNumber" name="cardNumber"  autofocus>
+            <input type="text" class="form-control" id="cardNumber" name="cardNumber"  autofocus>
         </div>
     </form>
 

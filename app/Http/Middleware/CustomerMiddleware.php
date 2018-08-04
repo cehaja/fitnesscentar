@@ -15,10 +15,13 @@ class CustomerMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if ($request->user() && $request->user()->type != 'customer')
+        if ($request->user() && $request->user()->type != 'customer' && $request->user()->type !='member')
         {
             return redirect('home');
         }
+        if (!$request->user()){
+            return redirect('login');
+        };
         return $next($request);
     }
 }

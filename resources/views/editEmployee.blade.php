@@ -1,6 +1,13 @@
 @extends ('layouts.adminLayout')
 @section('content')
-
+    <link href="{{asset('css/error.css')}}" type="text/css" rel="stylesheet">
+    <div id="error">
+        <ul>
+            @foreach( $errors->all() as $error)
+                <li> {{$error}} </li>
+            @endforeach
+        </ul>
+    </div>
     <form id="form" style="margin: 20px;" action="{{ route('editEmployee',['id' => $employee->id]) }}" method="post" enctype="multipart/form-data">
         {{ csrf_field() }}
         <div class="form-group">
