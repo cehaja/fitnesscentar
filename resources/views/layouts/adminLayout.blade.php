@@ -25,8 +25,10 @@
         <ul id="menu-content" class="menu-content collapse out">
 
             <li>
-                <a href="#">
-                    <i class="fa fa-dashboard fa-lg"></i> Home
+                <a href="{{route('adminHome')}}">
+                    <div>
+                        <i class="fa fa-home fa-lg"></i> Home
+                    </div>
                 </a>
             </li>
 
@@ -94,6 +96,39 @@
                         Attendance
                     </div>
                 </a>
+            </li>
+
+            <li data-toggle="collapse" data-target="#orders" class="collapsed">
+                <a href="#"><i class="fas fa-shopping-cart"></i></i>Orders</a>
+            </li>
+            <ul class="sub-menu collapse" id="orders">
+                <li>
+                    <a href="{{route('uncompletedOrders')}}">
+                        <div>
+                            Not sent
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{route('sentOrders')}}">
+                        <div>
+                            Sent
+                        </div>
+                    </a>
+                </li>
+            </ul>
+            <li>
+                <a href="{{ route('logout') }}"
+                   onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
+                    <div>
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </div>
+                </a>
+                <form id="frm-logout" action="{{ route('logout') }}" method="POST"
+                      style="display: none;">
+                    {{ csrf_field() }}
+                </form>
             </li>
         </ul>
     </div>

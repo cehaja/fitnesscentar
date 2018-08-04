@@ -58,7 +58,9 @@ Route::group(['middleware' => ['\App\Http\Middleware\AdminEmployeeMiddleware']],
     Route::get('categories','AdminController@allCategories')->name('categories');
     Route::get('addSubcategory/{id}','AdminController@addSubcategory')->name('addSubcategory');
     Route::post('addSubcategory/{id}', 'AdminController@saveSubcategory');
-
+    Route::get('uncompletedOrders','AdminController@uncompletedOrders')->name('uncompletedOrders');
+    Route::get('completeOrder/{id}','AdminController@completeOrder')->name('completeOrder');
+    Route::get('sentOrders','AdminController@sentOrders')->name('sentOrders');
 });
 Route::group(['middleware' => ['\App\Http\Middleware\CustomerMiddleware']],function (){
     Route::post('orderItem','CustomerController@orderItemP')->name('orderItemP');
@@ -69,6 +71,7 @@ Route::group(['middleware' => ['\App\Http\Middleware\CustomerMiddleware']],funct
     Route::get('paymentStatus','PaymentController@paymentStatus')->name('paymentStatus');
     Route::get('chooseAddress','CustomerController@displayAddresses')->name('chooseAddress');
     Route::post('checkout','CustomerController@checkout')->name('checkout');
+    Route::post('checkoutNewAddress','CustomerController@checoutNewAddress')->name('checkoutNewAddress');
     Route::get('profile','CustomerController@profileDetails')->name('profile');
     Route::post('profile','CustomerController@updateProfile');
     Route::post('profile','CustomerController@changePassword')->name('changePassword');

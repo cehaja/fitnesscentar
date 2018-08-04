@@ -89,13 +89,20 @@ class CustomerController extends Controller
         $countries = Country::all();
         if ($addresses->first()) {
 
-            return view('chooseAddress', ['addresses' => $addresses,]);
+            return view('chooseAddress', ['addresses' => $addresses, 'countries' => $countries]);
         }
         return view('chooseAddress', ['addresses' => null, 'countries' => $countries]);
     }
 
-    public function checkout(Request $request)
+    public function checkoutNewAddress(Request $request)
     {
+        $request->validate([
+            'address' => 'required|string|min:3|max:50',
+            'city' => 'required|string|min:3|max:50',
+            'ZIPCode' => 'numeric|required',
+            'country' => 'required|exists:countries,id'
+        ]);
+
         $_order = Order::whereNull('orderDate')->where('userID', Auth::user()->id)->get();
         $order = $_order[0];
         $address = new Address();
@@ -108,6 +115,14 @@ class CustomerController extends Controller
         $order->addressID = $address->id;
         $order->save();
         return Redirect::route('pay', ['id' => $order->id]);
+    }
+
+    public function checkout(Request $request){
+        $_order = Order::whereNull('orderDate')->where('userID', Auth::user()->id)->get();
+        $order = $_order[0];
+        $order->addressID = $request->address;
+        $order->save();
+        return Redirect::route('pay',['id' => $order->id]);
     }
 
     public function profileDetails()

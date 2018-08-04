@@ -9,6 +9,7 @@ use App\Country;
 use App\Item;
 use App\Membership;
 use App\MembershipType;
+use App\Order;
 use App\Rules\LettersOnly;
 use App\Rules\MembershipStartDateRule;
 use App\Rules\StartDateRule;
@@ -89,7 +90,7 @@ class AdminController extends Controller
         $image = $request->file('image');
         $image->move('../storage/app/public/itemImages', $item->image);
         $item->save();
-        return redirect()->back();
+        return redirect('categories');
     }
 
     public function addWorker()
@@ -127,7 +128,7 @@ class AdminController extends Controller
         $address->countryID = $request->input('country');
         $address->userID = $user->id;
         $address->save();
-        return redirect()->back();
+        return redirect('employees');
     }
 
     public function addMembershipType()
@@ -146,7 +147,7 @@ class AdminController extends Controller
         $type->name = $request->input('name');
         $type->price = $request->input('price');
         $type->save();
-        return redirect()->back();
+        return redirect('membershipTypes');
     }
 
     public function addMember()
@@ -184,7 +185,7 @@ class AdminController extends Controller
         $membership->userID = $user->id;
         $membership->save();
 
-        return redirect()->back();
+        return redirect('members');
     }
 
     public function allMembers()
@@ -482,5 +483,30 @@ class AdminController extends Controller
         }
         return redirect('categories');
     }
+
+    public function uncompletedOrders(){
+        $orders = Order::whereNull('deliveryDate')->get();
+        if ($orders->first()){
+            return view('uncompletedOrders',['orders' => $orders]);
+        }
+        return view('uncompletedOrders',['orders' => null]);
+    }
+
+    public function completeOrder($id){
+        $order = Order::find($id);
+        $dateTime = new DateTime();
+        $order->deliveryDate = $dateTime->format('Y-m-d');
+        $order->save();
+        return redirect()->back();
+    }
+
+    public function sentOrders(){
+        $orders = Order::whereNotNull('deliveryDate')->get();
+        if ($orders->first()){
+            return view('sentOrders',['orders' => $orders]);
+        }
+        return view('sentOrders',['orders' => null]);
+    }
+
 
 }

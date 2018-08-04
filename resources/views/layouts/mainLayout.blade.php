@@ -4,7 +4,6 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/public/css/CSS_welcome.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css"
           integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -99,7 +98,7 @@
                                 <a class="btn-link btn" href="{{route('profile')}}">
                                     <div>My profile</div>
                                 </a>
-                                <a class="btn btn-primary" href="{{route('completedOrders')}}">
+                                <a class="btn btn-link" href="{{route('completedOrders')}}">
                                     <div>Completed orders</div>
                                 </a>
                                 @if(\Illuminate\Support\Facades\Auth::user()->type == 'member')

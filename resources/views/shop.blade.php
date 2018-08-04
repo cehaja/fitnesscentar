@@ -1,6 +1,7 @@
 @extends('layouts.mainLayout')
 <link href="{{asset('css/shopCSS.css')}}" rel="stylesheet" type="text/css">
 @section('content')
+    {{csrf_field()}}
     @foreach($items as $item)
                 <div class="itemContainer">
                     <img class="itemImage" src="{{asset('storage/itemImages/'.$item->image)}}">

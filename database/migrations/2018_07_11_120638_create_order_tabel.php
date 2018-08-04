@@ -17,7 +17,7 @@ class CreateOrderTabel extends Migration
             $table->increments('id');
             $table->date('orderDate')->nullable();
             $table->float('total')->default(0);
-            $table->float('deliveryDate')->nullable();
+            $table->date('deliveryDate')->nullable();
             $table->unsignedInteger('userID');
             $table->foreign('userID')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedInteger('addressID')->nullable();
