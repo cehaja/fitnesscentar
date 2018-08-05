@@ -35,9 +35,9 @@ Route::group(['middleware' => ['\App\Http\Middleware\AdminEmployeeMiddleware']],
     Route::get('addMember', 'AdminController@addMember')->name('addMember');
     Route::post('addMember', 'AdminController@saveMember');
     Route::get('members', 'AdminController@allMembers')->name('members');
-    Route::get('updateMember/{id}', 'AdminController@showUpdateMemberForm')->name('updateMember');
-    Route::post('updateMember/{id}', 'AdminController@updateMember');
-    Route::get('deleteMember/{id}', 'AdminController@deleteMember')->name('deleteMember');
+
+    Route::get('memberDetails/{id}', 'AdminController@showUpdateMemberForm')->name('updateMember');
+
     Route::get('addMembership/{id}', 'AdminController@addMembership')->name('addMembership');
     Route::post('addMembership/{id}', 'AdminController@saveMembership');
     Route::get('items', 'AdminController@allItems')->name('items');
@@ -72,7 +72,7 @@ Route::group(['middleware' => ['\App\Http\Middleware\CustomerMiddleware']],funct
     Route::get('paymentStatus','PaymentController@paymentStatus')->name('paymentStatus');
     Route::get('chooseAddress','CustomerController@displayAddresses')->name('chooseAddress');
     Route::post('checkout','CustomerController@checkout')->name('checkout');
-    Route::post('checkoutNewAddress','CustomerController@checoutNewAddress')->name('checkoutNewAddress');
+    Route::post('checkoutNewAddress','CustomerController@checkoutNewAddress')->name('checkoutNewAddress');
     Route::get('profile','CustomerController@profileDetails')->name('profile');
     Route::post('profile','CustomerController@updateProfile');
     Route::post('profile','CustomerController@changePassword')->name('changePassword');

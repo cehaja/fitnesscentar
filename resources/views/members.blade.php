@@ -9,7 +9,6 @@
             <th scope="col">Email</th>
             <th scope="col">Membership end date</th>
             <th scope="col"></th>
-            <th scope="col"></th>
         </tr>
         </thead>
         <tbody>
@@ -19,8 +18,7 @@
                 <td>{{$member['lastName']}}</td>
                 <td>{{$member['email']}}</td>
                 <td>{{$member['endDate']}}</td>
-                 <td><a href="{{route('updateMember',['id' => $member['id']])}}">Edit</a></td>
-                 <td><a href="{{route('deleteMember',['id'=>$member['id']])}}">Delete</a> </td>
+                 <td><a href="{{route('updateMember',['id' => $member['id']])}}">Details</a></td>
              </tr>
             @endforeach
         </tbody>

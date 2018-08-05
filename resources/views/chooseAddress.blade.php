@@ -1,6 +1,14 @@
 @extends('layouts.mainLayout')
 @section('content')
     <h3>Choose address</h3>
+    <link href="{{asset('css/error.css')}}" type="text/css" rel="stylesheet">
+    <div id="error">
+        <ul>
+            @foreach( $errors->all() as $error)
+                <li> {{$error}} </li>
+            @endforeach
+        </ul>
+    </div>
 
     @if($addresses != null)
         <div id="form1">

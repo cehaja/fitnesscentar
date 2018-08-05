@@ -1,7 +1,13 @@
 @extends('layouts.mainLayout')
 @section('content')
+    <link href="{{asset('css/error.css')}}" type="text/css" rel="stylesheet">
+        <ul id="error" style="position: relative; bottom: 24px;">
+            @foreach( $errors->all() as $error)
+                <li> {{$error}} </li>
+            @endforeach
+        </ul>
     <!-- slide show -->
-    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" style="position: relative; bottom: 25px;">
+    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" style="position: relative; bottom: 40px;">
         <ol class="carousel-indicators">
             <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
             <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>

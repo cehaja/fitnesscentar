@@ -41,12 +41,6 @@
                    value="{{old('email')}}">
         </div>
 
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" class="form-control col-lg-5" id="password" name="password"
-                   placeholder="Enter password">
-        </div>
-
         <div class="form-row">
             <div class="form-group col-md-3">
                 <label for="type">Membership type</label>

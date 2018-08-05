@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use JavaScript;
 use stdClass;
@@ -117,9 +118,11 @@ class AdminController extends Controller
         $user->lastName = $request->input('lastName');
         $user->birthDate = $request->input('birthDate');
         $user->email = $request->input('email');
-        $user->password = Hash::make($request->input('password'));
+        $pw = bcrypt(str_random(35));
+        $user->password = $pw;
         $user->type = 'employee';
         $user->save();
+
 
         $address = new Address();
         $address->address = $request->input('address');
@@ -128,6 +131,15 @@ class AdminController extends Controller
         $address->countryID = $request->input('country');
         $address->userID = $user->id;
         $address->save();
+
+        $token = app('auth.password.broker')->createToken($user);
+
+        // Send email
+        Mail::send('newPass', ['user' => $user, 'token' => $token], function ($m) use ($user) {
+            $m->from('hello@appsite.com', 'Your App Name');
+            $m->to($user->email, $user->name)->subject('Welcome to APP');
+        });
+
         return redirect('employees');
     }
 
@@ -165,7 +177,8 @@ class AdminController extends Controller
             'email' => 'email|unique:users',
             'membershipCardNumber' => 'required|digits:8|unique:users',
             'startDate' => ['required', 'date', 'after_or_equal:today'],
-            'endDate' => ['required', 'date', 'after:startDate']
+            'endDate' => ['required', 'date', 'after:startDate'],
+
         ]);
 
         $user = new User();
@@ -173,7 +186,8 @@ class AdminController extends Controller
         $user->lastName = $request->input('lastName');
         $user->birthDate = $request->input('birthDate');
         $user->email = $request->input('email');
-        $user->password = Hash::make($request->input('password'));
+        $pw = bcrypt(str_random(35));
+        $user->password = $pw;
         $user->membershipCardNumber = $request->input('membershipCardNumber');
         $user->type = 'member';
         $user->save();
@@ -184,6 +198,15 @@ class AdminController extends Controller
         $membership->typeID = $request->input('type');
         $membership->userID = $user->id;
         $membership->save();
+
+        $token = app('auth.password.broker')->createToken($user);
+
+        // Send email
+        Mail::send('newPass', ['user' => $user, 'token' => $token], function ($m) use ($user) {
+            $m->from('hello@appsite.com', 'Your App Name');
+            $m->to($user->email, $user->name)->subject('Welcome to APP');
+        });
+
 
         return redirect('members');
     }
@@ -224,13 +247,6 @@ class AdminController extends Controller
         $member->membershipCardNumber = $request->input('membershipCardNumber');
         $member->email = $request->input('email');
         $member->save();
-        return redirect('members');
-    }
-
-    public function deleteMember($id)
-    {
-        $member = User::find($id);
-        $member->delete();
         return redirect('members');
     }
 
@@ -294,7 +310,7 @@ class AdminController extends Controller
             'description' => 'required|string|min:3',
             'category' => 'required|exists:categories,id',
             'subcategory' => 'required|exists:subcategories:id',
-            'image' => 'required|image'
+            'image' => 'image'
         ]);
 
         $item = Item::find($id);
@@ -485,7 +501,7 @@ class AdminController extends Controller
     }
 
     public function uncompletedOrders(){
-        $orders = Order::whereNull('deliveryDate')->get();
+        $orders = Order::whereNull('deliveryDate')->whereNotNull('orderDate')->get();
         if ($orders->first()){
             return view('uncompletedOrders',['orders' => $orders]);
         }

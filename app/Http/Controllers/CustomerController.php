@@ -99,7 +99,7 @@ class CustomerController extends Controller
         $request->validate([
             'address' => 'required|string|min:3|max:50',
             'city' => 'required|string|min:3|max:50',
-            'ZIPCode' => 'numeric|required',
+            'zip' => 'numeric|required',
             'country' => 'required|exists:countries,id'
         ]);
 
@@ -110,7 +110,7 @@ class CustomerController extends Controller
         $address->countryID = $request->country;
         $address->city = $request->city;
         $address->address = $request->address;
-        $address->ZIPCode = $request->ZIPCode;
+        $address->ZIPCode = $request->zip;
         $address->save();
         $order->addressID = $address->id;
         $order->save();
