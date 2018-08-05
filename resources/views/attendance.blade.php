@@ -1,4 +1,5 @@
 @extends('layouts.adminLayout')
+
 @section('content')
     <link href="{{asset('css/error.css')}}" type="text/css" rel="stylesheet">
     <div id="error">

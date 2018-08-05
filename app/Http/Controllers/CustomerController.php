@@ -40,7 +40,7 @@ class CustomerController extends Controller
             if ($orderItem->itemID == $id) {
                 $orderItem->quantity = $orderItem->quantity + $quantity;
                 $orderItem->save();
-                return redirect('shop');
+                return redirect('order');
             }
         }
         $orderItem = new OrderItem();
@@ -48,7 +48,7 @@ class CustomerController extends Controller
         $orderItem->itemID = $id;
         $orderItem->quantity = $quantity;
         $orderItem->save();
-        return redirect('shop');
+        return redirect('order');
     }
 
     public function newAddress()

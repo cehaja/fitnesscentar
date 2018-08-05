@@ -61,6 +61,7 @@ Route::group(['middleware' => ['\App\Http\Middleware\AdminEmployeeMiddleware']],
     Route::get('uncompletedOrders','AdminController@uncompletedOrders')->name('uncompletedOrders');
     Route::get('completeOrder/{id}','AdminController@completeOrder')->name('completeOrder');
     Route::get('sentOrders','AdminController@sentOrders')->name('sentOrders');
+    Route::post('ajaxAttendance','AjaxController@attendance')->name('ajaxAttendance');
 });
 Route::group(['middleware' => ['\App\Http\Middleware\CustomerMiddleware']],function (){
     Route::post('orderItem','CustomerController@orderItemP')->name('orderItemP');

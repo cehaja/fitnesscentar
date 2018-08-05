@@ -39,7 +39,9 @@
 
         @if(\Illuminate\Support\Facades\Auth::user())
             <form class="form-inline my-2 my-lg-0">
-                <img src="{{URL::asset('/assets/cart.png')}}" height="30" width="35" style="margin-right: 20px">
+                <a href="{{route('currentOrder')}}">
+                    <img src="{{URL::asset('/assets/cart.png')}}" height="30" width="35" style="margin-right: 20px">
+                </a>
             </form>
         @endif
 

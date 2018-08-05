@@ -5,6 +5,7 @@
     @if($orderItems == null)
     <h2>Order is empty</h2>
     @else
+        {{csrf_field()}}
         <h3>Current order</h3>
         <table class="table">
             <thead class="thead-dark">
@@ -30,8 +31,9 @@
             @endforeach
             </tbody>
         </table>
-        <h5>Total: <h5 id="price"></h5></h5>
-        <a href="{{route('chooseAddress')}}">Complete order</a>
+        <h5 style="margin: 15px;">Total: <h5 id="price"></h5></h5>
+        <a style="margin: 10px;" class="btn btn-primary" href="{{route('chooseAddress')}}">Complete order</a>
+        <a style="margin: 10px;" class="btn btn-secondary" href="{{route('shop')}}">Continue shopping</a>
         <script src="{{asset('js/currentOrder.js')}}"></script>
     @endif
 
