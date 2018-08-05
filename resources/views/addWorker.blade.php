@@ -15,27 +15,32 @@
 
         <div class="form-group ">
             <label for="firstName">First name</label>
-            <input type="text" class="form-control col-md-6" id="firstName" name="firstName" placeholder="Enter first name" value="{{old('firstName')}}">
+            <input type="text" class="form-control col-md-6" id="firstName" name="firstName"
+                   placeholder="Enter first name" value="{{old('firstName')}}">
         </div>
 
         <div class="form-group">
             <label for="lastName">Last name</label>
-            <input type="text" class="form-control col-md-6" id="lastName" name="lastName" placeholder="Enter last name" value="{{old('lastName')}}">
+            <input type="text" class="form-control col-md-6" id="lastName" name="lastName" placeholder="Enter last name"
+                   value="{{old('lastName')}}">
         </div>
 
         <div class="form-group">
             <label for="Birth date">Birth date</label>
-            <input type="date" class="form-control col-md-6" id="birthDate" name="birthDate" placeholder="Enter birth date" value="{{old('birthDate')}}">
+            <input type="date" class="form-control col-md-6" id="birthDate" name="birthDate"
+                   placeholder="Enter birth date" value="{{old('birthDate')}}">
         </div>
 
         <div class="form-group ">
             <label for="email">Email</label>
-            <input type="email" class="form-control col-md-6" id="email" name="email" placeholder="Enter email" value="{{old('email')}}">
+            <input type="email" class="form-control col-md-6" id="email" name="email" placeholder="Enter email"
+                   value="{{old('email')}}">
         </div>
 
         <div class="form-group">
             <label for="address">Address</label>
-            <input type="text" class="form-control col-md-6" id="address" name="address" placeholder="Enter address" value="{{old('address')}}">
+            <input type="text" class="form-control col-md-6" id="address" name="address" placeholder="Enter address"
+                   value="{{old('address')}}">
         </div>
 
         <div class="form-row">
@@ -48,7 +53,8 @@
                 <label for="country">Country</label>
                 <select id="country" name="country" class="form-control">
                     @foreach($countries as $country)
-                        <option value="{{$country->id}}" @if($country->id == old('country')) selected @endif>{{$country->name}}</option>
+                        <option value="{{$country->id}}"
+                                @if($country->id == old('country')) selected @endif>{{$country->name}}</option>
                     @endforeach
                 </select>
             </div>

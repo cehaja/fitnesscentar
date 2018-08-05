@@ -128,14 +128,15 @@ class CustomerController extends Controller
         return Redirect::route('pay', ['id' => $order->id]);
     }
 
-    public function checkout(Request $request){
+    public function checkout(Request $request)
+    {
         //find active order
         $_order = Order::whereNull('orderDate')->where('userID', Auth::user()->id)->get();
         $order = $_order[0];
         //change order address to selected address
         $order->addressID = $request->address;
         $order->save();
-        return Redirect::route('pay',['id' => $order->id]);
+        return Redirect::route('pay', ['id' => $order->id]);
     }
 
     public function profileDetails()
@@ -170,7 +171,7 @@ class CustomerController extends Controller
     public function changePassword(Request $request)
     {
         $request->validate([
-            'oldPassword' => ['required',new PasswordMatch()],
+            'oldPassword' => ['required', new PasswordMatch()],
             'password' => 'required|min:6|string|confirmed'
         ]);
         //set new password
@@ -180,27 +181,31 @@ class CustomerController extends Controller
         return redirect('shop');
     }
 
-    public function completedOrders(){
-        $orders = Order::where('userID',Auth::user()->id)->get();
+    public function completedOrders()
+    {
+        $orders = Order::where('userID', Auth::user()->id)->get();
         //if there are any completed orders
-        if ($orders->first()){
-            return view('completedOrders' , ['orders' => $orders]);
+        if ($orders->first()) {
+            return view('completedOrders', ['orders' => $orders]);
         }
-        return view('completedOrders',['orders' => null]);
+        return view('completedOrders', ['orders' => null]);
     }
 
-    public function deleteOrderItem($id){
+    public function deleteOrderItem($id)
+    {
         $orderItem = OrderItem::find($id);
         $orderItem->delete();
         return redirect('order');
     }
-    public function attendance(){
+
+    public function attendance()
+    {
         $user = Auth::user();
-        $attendances = Attendance::where('userID',$user->id)->get();
-        if ($attendances->first()){
-            return view('memberAttendance',['attendances' => $attendances]);
+        $attendances = Attendance::where('userID', $user->id)->get();
+        if ($attendances->first()) {
+            return view('memberAttendance', ['attendances' => $attendances]);
         }
-        return view('memberAttendance',['attendances' => null]);
+        return view('memberAttendance', ['attendances' => null]);
     }
 
 }

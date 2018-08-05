@@ -15,9 +15,9 @@ class AjaxController extends Controller
     public function attendance(Request $request)
     {
         //find user whose card is used
-        $member = User::where('membershipCardNumber',$request->c)->get();
+        $member = User::where('membershipCardNumber', $request->c)->get();
         //if card doesn't belongs to any user
-        if (!$member->first()){
+        if (!$member->first()) {
             return response()->json(array('msg' => 'error'));
         }
         $test = 0;

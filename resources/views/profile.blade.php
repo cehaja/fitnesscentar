@@ -10,7 +10,7 @@
     </div>
 
     <div style="display: inline-block; width: 500px">
-        <form style="margin: 20px;" action="{{route('profile')}}"  method="post"
+        <form style="margin: 20px;" action="{{route('profile')}}" method="post"
               enctype="multipart/form-data">
             {{ csrf_field() }}
             <div class="form-group">
@@ -54,7 +54,7 @@
         </form>
     </div>
     <div style="display: inline-block;">
-        <form style="margin: 20px;" action="{{route('changePassword')}}"  method="post"
+        <form style="margin: 20px;" action="{{route('changePassword')}}" method="post"
               enctype="multipart/form-data">
             {{ csrf_field() }}
 

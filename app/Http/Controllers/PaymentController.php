@@ -163,7 +163,7 @@ class PaymentController extends Controller
             }
             $activeOrder->save();
             \Session::put('success', 'Payment success');
-            return Redirect::to('paymentStatus');
+            return Redirect::to('completedOrders');
         }
 
         \Session::put('error', 'Payment failed');

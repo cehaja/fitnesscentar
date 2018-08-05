@@ -10,10 +10,10 @@
         </thead>
         <tbody>
         @foreach($categories as $category)
-        <tr>
+            <tr>
                 <td>{{$category['category']}}</td>
                 <td>{{$category['subcategories']}}</td>
-        </tr>
+            </tr>
         @endforeach
         </tbody>
     </table>

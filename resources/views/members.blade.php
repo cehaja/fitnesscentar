@@ -12,15 +12,15 @@
         </tr>
         </thead>
         <tbody>
-            @foreach($membersData as $member)
-             <tr>
+        @foreach($membersData as $member)
+            <tr>
                 <td>{{$member['firstName']}}</td>
                 <td>{{$member['lastName']}}</td>
                 <td>{{$member['email']}}</td>
                 <td>{{$member['endDate']}}</td>
-                 <td><a href="{{route('updateMember',['id' => $member['id']])}}">Details</a></td>
-             </tr>
-            @endforeach
+                <td><a href="{{route('updateMember',['id' => $member['id']])}}">Details</a></td>
+            </tr>
+        @endforeach
         </tbody>
     </table>
 

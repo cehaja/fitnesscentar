@@ -12,12 +12,12 @@
         </thead>
         <tbody>
         @foreach($actives as $active)
-        <tr>
-            <td>{{$active['user']}}</td>
-            <td>{{$active['type']}}</td>
-            <td>{{$active['startDate']}}</td>
-            <td>{{$active['endDate']}}</td>
-        </tr>
+            <tr>
+                <td>{{$active['user']}}</td>
+                <td>{{$active['type']}}</td>
+                <td>{{$active['startDate']}}</td>
+                <td>{{$active['endDate']}}</td>
+            </tr>
         @endforeach
         </tbody>
     </table>

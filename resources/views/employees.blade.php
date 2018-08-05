@@ -20,7 +20,7 @@
                 <td>{{$employee->email}}</td>
                 <td>{{$employee->birthDate}}</td>
                 <td><a href="{{route('editEmployee',['id' => $employee->id])}}">Edit</a></td>
-                <td><a href="{{route('deleteEmployee',['id' => $employee->id])}}">Delete</a> </td>
+                <td><a href="{{route('deleteEmployee',['id' => $employee->id])}}">Delete</a></td>
             </tr>
         @endforeach
         </tbody>

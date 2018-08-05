@@ -4,7 +4,7 @@
     <table class="table">
         <thead class="thead-dark">
         <tr>
-            <th >Image</th>
+            <th>Image</th>
             <th scope="col">Name</th>
             <th scope="col">Price</th>
             <th scope="col">Category</th>

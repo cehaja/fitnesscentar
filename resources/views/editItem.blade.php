@@ -28,7 +28,8 @@
         <div class="form-group col-md-5">
             <label for="manufacturer">Manufacturer</label>
             <input type="text" class="form-control" id="manufacturer" name="manufacturer"
-                   placeholder="Enter manufacturer" @if ($errors->all()) value="{{old('manufacturer')}}" @else value="{{$item->manufacturer}}" @endif>
+                   placeholder="Enter manufacturer" @if ($errors->all()) value="{{old('manufacturer')}}"
+                   @else value="{{$item->manufacturer}}" @endif>
         </div>
 
         <div class="form-group col-md-5">
@@ -40,14 +41,16 @@
         <div class="form-group col-md-5">
             <label for="description">Description</label>
             <textarea class="form-control" id="description" name="description" rows="3"
-                      placeholder="Enter description">@if ($errors->all()) value="{{old('description')}}" @else {{$item->description}} @endif</textarea>
+                      placeholder="Enter description">@if ($errors->all()) value="{{old('description')}}
+                " @else {{$item->description}} @endif</textarea>
         </div>
 
         <div class="form-group col-md-5">
             <label for="category">Category</label>
             <select id="category" name="category" class="form-control">
                 @foreach($categories as $category)
-                    <option value="{{$category->id}}" @if($category->id == old('$category')) selected @endif>{{$category->name}}</option>
+                    <option value="{{$category->id}}"
+                            @if($category->id == old('$category')) selected @endif>{{$category->name}}</option>
                 @endforeach
             </select>
         </div>

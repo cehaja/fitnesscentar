@@ -2,7 +2,7 @@
 @section('content')
 
     @if($orders == null)
-    <h5> There are no orders!!</h5>
+        <h5> There are no orders!!</h5>
     @else
         <table class="table">
             <thead class="thead-dark">

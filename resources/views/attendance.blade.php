@@ -15,7 +15,7 @@
 
         <div class="form-group col-md-5">
             <label for="cardNumber">Card number</label>
-            <input type="text" class="form-control" id="cardNumber" name="cardNumber"  autofocus>
+            <input type="text" class="form-control" id="cardNumber" name="cardNumber" autofocus>
         </div>
     </form>
 
@@ -35,5 +35,5 @@
         @endforeach
         </tbody>
     </table>
-<script src="{{asset('js/attendance.js')}}"></script>
+    <script src="{{asset('js/attendance.js')}}"></script>
 @endsection
