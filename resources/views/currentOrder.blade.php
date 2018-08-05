@@ -26,7 +26,7 @@
                     <td>{{$orderItem->item->category->name.'( '.$orderItem->item->subcategory->name.' )'}}</td>
                     <td>{{$orderItem->quantity}}</td>
                     <td class="itemPrice">{{($orderItem->item->price * $orderItem->quantity) . ' €'}}</td>
-                    <td>Delete</td>
+                    <td><a class="btn btn-link" href="{{route('deleteOrderItem',['id' => $orderItem->id])}}">Delete</a></td>
                 </tr>
             @endforeach
             </tbody>

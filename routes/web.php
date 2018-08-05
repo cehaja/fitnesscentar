@@ -77,6 +77,10 @@ Route::group(['middleware' => ['\App\Http\Middleware\CustomerMiddleware']],funct
     Route::post('profile','CustomerController@updateProfile');
     Route::post('profile','CustomerController@changePassword')->name('changePassword');
     Route::get('completedOrders','CustomerController@completedOrders')->name('completedOrders');
+    Route::get('deleteOrderItem/{id}','CustomerController@deleteOrderItem')->name('deleteOrderItem');
+});
+Route::group(['middleware' => ['\App\Http\Middleware\MemberMiddleware']],function (){
+    Route::get('memberAttendance','CustomerController@attendance')->name('memberAttendance');
 });
 Route::get('shop','CustomerController@showItemsInShop')->name('shop');
 Route::get('itemDetails/{id}','CustomerController@itemDetails')->name('itemDetails');

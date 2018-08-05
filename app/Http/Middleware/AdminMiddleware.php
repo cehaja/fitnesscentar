@@ -17,7 +17,7 @@ class AdminMiddleware
     {
         if ($request->user() && $request->user()->type != 'admin')
         {
-            return redirect('home');
+            return redirect('/');
         }
         else if (!$request->user()){
             return redirect('login');

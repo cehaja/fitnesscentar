@@ -67,6 +67,7 @@ class AdminController extends Controller
 
     public function saveItem(Request $request)
     {
+        //validation
         $request->validate([
             'name' => 'required|string|min:3|max:25',
             'price' => 'required|numeric|gte:0',
@@ -77,7 +78,7 @@ class AdminController extends Controller
             'subcategory' => 'exists:subcategories,id',
             'image' => 'required|image'
         ]);
-
+        //create new Item
         $item = new Item();
         $item->name = $request->input('name');
         $item->price = $request->input('price');
@@ -88,6 +89,7 @@ class AdminController extends Controller
         $item->subcategoryID = $request->input('subcategory');
         $item->save();
         $item->image = 'item' . $item->id . '.jpg';
+        //save image in storage
         $image = $request->file('image');
         $image->move('../storage/app/public/itemImages', $item->image);
         $item->save();
@@ -102,6 +104,7 @@ class AdminController extends Controller
 
     public function saveWorker(Request $request)
     {
+        //validation
         $request->validate([
             'firstName' => ['required', 'string', 'min:3', 'max:25', new LettersOnly()],
             'lastName' => ['required', 'string', 'min:3', 'max:25', new LettersOnly()],
@@ -112,18 +115,19 @@ class AdminController extends Controller
             'zip' => 'numeric|required',
             'country' => 'required|exists:countries,id'
         ]);
-
+        //create new user-employee
         $user = new User();
         $user->firstName = $request->input('firstName');
         $user->lastName = $request->input('lastName');
         $user->birthDate = $request->input('birthDate');
         $user->email = $request->input('email');
+        //generate random password and crypt it
         $pw = bcrypt(str_random(35));
         $user->password = $pw;
         $user->type = 'employee';
         $user->save();
 
-
+        //create employess address
         $address = new Address();
         $address->address = $request->input('address');
         $address->city = $request->input('city');
@@ -132,9 +136,8 @@ class AdminController extends Controller
         $address->userID = $user->id;
         $address->save();
 
+        //send email with token for password reset
         $token = app('auth.password.broker')->createToken($user);
-
-        // Send email
         Mail::send('newPass', ['user' => $user, 'token' => $token], function ($m) use ($user) {
             $m->from('hello@appsite.com', 'Your App Name');
             $m->to($user->email, $user->name)->subject('Welcome to APP');
@@ -150,11 +153,12 @@ class AdminController extends Controller
 
     public function saveMembershipType(Request $request)
     {
+        //validation
         $request->validate([
             'name' => ['required', 'string', 'unique:memberships', 'min:3', 'max 20', new LettersOnly()],
             'price' => 'digit|numeric|gte:0'
         ]);
-
+        //create new membership type
         $type = new MembershipType();
         $type->name = $request->input('name');
         $type->price = $request->input('price');
@@ -170,6 +174,7 @@ class AdminController extends Controller
 
     public function saveMember(Request $request)
     {
+        //validation
         $request->validate([
             'firstName' => ['required', 'string', 'min:3', 'max:30', new LettersOnly()],
             'lastName' => ['required', 'string', 'min:3', 'max:30', new LettersOnly()],
@@ -180,7 +185,7 @@ class AdminController extends Controller
             'endDate' => ['required', 'date', 'after:startDate'],
 
         ]);
-
+        //create new user-member
         $user = new User();
         $user->firstName = $request->input('firstName');
         $user->lastName = $request->input('lastName');
@@ -192,6 +197,7 @@ class AdminController extends Controller
         $user->type = 'member';
         $user->save();
 
+        //create membership for member
         $membership = new Membership();
         $membership->startDate = $request->input('startDate');
         $membership->endDate = $request->input('endDate');
@@ -199,9 +205,8 @@ class AdminController extends Controller
         $membership->userID = $user->id;
         $membership->save();
 
+        //send email with token for password reset
         $token = app('auth.password.broker')->createToken($user);
-
-        // Send email
         Mail::send('newPass', ['user' => $user, 'token' => $token], function ($m) use ($user) {
             $m->from('hello@appsite.com', 'Your App Name');
             $m->to($user->email, $user->name)->subject('Welcome to APP');
@@ -213,6 +218,7 @@ class AdminController extends Controller
 
     public function allMembers()
     {
+        //get all members
         $members = User::where('type', 'member')->get();
         $membersData = array();
         foreach ($members as $member) {
@@ -226,28 +232,10 @@ class AdminController extends Controller
     public function showUpdateMemberForm($id)
     {
         $member = User::find($id);
+        //get all memberships of user ordered by endDate(desc) so I can get last membership
         $memberships = Membership::where('userID', $member->id)->orderBy('endDate', 'desc')->get();
         $membershipType = MembershipType::find($memberships[0]->typeID);
         return view('updateMember', ['member' => $member, 'membership' => $memberships[0], 'type' => $membershipType]);
-    }
-
-    public function updateMember(Request $request, $id)
-    {
-        $request->validate([
-            'firstName' => ['required', 'string', 'min:3', 'max:30', new LettersOnly()],
-            'lastName' => ['required', 'string', 'min:3', 'max:30', new LettersOnly()],
-            'birthDate' => 'required|date|before:today',
-            'email' => 'email|unique:users',
-            'membershipCardNumber' => 'required|digits:8|unique:users',
-        ]);
-        $member = User::find($id);
-        $member->firstName = $request->input('firstName');
-        $member->lastName = $request->input('lastName');
-        $member->birthDate = $request->input('birthDate');
-        $member->membershipCardNumber = $request->input('membershipCardNumber');
-        $member->email = $request->input('email');
-        $member->save();
-        return redirect('members');
     }
 
     public function addMembership($id)
@@ -263,7 +251,7 @@ class AdminController extends Controller
             'endDate' => 'required|date|after:startDate',
             'type' => 'exists:membership_types,id'
         ]);
-
+        //create new membership
         $membership = new Membership();
         $membership->userID = $id;
         $membership->typeID = $request->input('type');
@@ -277,6 +265,7 @@ class AdminController extends Controller
     {
         $items = Item::all();
         $itemsData = array();
+        //for each item find its category and subcategory and add it to array
         foreach ($items as $item) {
             $category = Category::find($item->categoryID);
             $subcategory = Subcategory::find($item->subcategoryID);
@@ -291,6 +280,7 @@ class AdminController extends Controller
         $subcategoriesArray = array();
         $categories = Category::all();
         $subcategories = Subcategory::all();
+        //prepare and send categories and subcategories to javascript
         foreach ($subcategories as $subcategory) {
             $subcategoriesArray[] = array($subcategory->id, $subcategory->categoryID, $subcategory->name);
         }
@@ -338,8 +328,10 @@ class AdminController extends Controller
 
     public function showAttendance()
     {
+        //get all attendances where exitTime is not defined
         $attendances = Attendance::whereNull('exitTime')->get();
         $data = array();
+        //for each attendance prepare needed data and send it to view
         foreach ($attendances as $attendance) {
             $member = User::find($attendance->userID);
             $data[] = array('id' => $attendance->id, 'user' => $member->firstName . ' ' . $member->lastName, 'arrivalTime' => $attendance->arrivalTime);
@@ -355,14 +347,18 @@ class AdminController extends Controller
 
         $time = new DateTime();
         $attendances = Attendance::whereNull('exitTime')->get();
+        //find user whose card is used
         $member = User::where('membershipCardNumber', $request->input('cardNumber'))->get();
         foreach ($attendances as $attendance) {
+            //if user on attendance is owner of card
             if ($attendance->userID == $member[0]->id) {
+                //set exitTime to current time
                 $attendance->exitTime = $time->format('H:i:s');
                 $attendance->save();
                 return redirect('attendance');
             }
         }
+        //add new attendance with user who is owner of card
         $attendance = new Attendance();
         $attendance->userID = $member[0]->id;
         $attendance->date = $time->format('Y-m-d');
@@ -375,8 +371,10 @@ class AdminController extends Controller
     {
         $time = new DateTime();
         $date = $time->format('Y-m-d');
+        //get all memberships where endDate is higher than current date
         $memberships = Membership::where('endDate', '>', $date)->get();
         $active = array();
+        //for each membership prepare data, add it to array and send it to view
         foreach ($memberships as $membership) {
             $user = User::find($membership->userID);
             $type = MembershipType::find($membership->typeID);
@@ -428,12 +426,8 @@ class AdminController extends Controller
             'lastName' => ['required', 'string', 'min:3', 'max:25', new LettersOnly()],
             'birthDate' => 'required|date|before:today',
             'email' => 'required|email|unique:users',
-            'address' => 'required|string|min:3|max:50',
-            'city' => 'required|string|min:3|max:50',
-            'zip' => 'numeric|required',
-            'country' => 'required|exists:countries,id'
         ]);
-
+        //change employee data
         $employee = User::find($id);
         $employee->firstName = $request->firstName;
         $employee->lastname = $request->lastName;
@@ -458,6 +452,7 @@ class AdminController extends Controller
         $categories = Category::all();
         $categoriesData = array();
         foreach ($categories as $category) {
+            //for each category find its all subcategories, prepare data and send it to view
             $subcategories = Subcategory::where('categoryID', $category->id)->get();
             $subcategoriesData = ' ';
             foreach ($subcategories as $subcategory) {
@@ -502,6 +497,7 @@ class AdminController extends Controller
 
     public function uncompletedOrders(){
         $orders = Order::whereNull('deliveryDate')->whereNotNull('orderDate')->get();
+        //if any order with deliveryDate not define and orderDate define exists
         if ($orders->first()){
             return view('uncompletedOrders',['orders' => $orders]);
         }
@@ -519,6 +515,7 @@ class AdminController extends Controller
     public function sentOrders(){
         $orders = Order::whereNotNull('deliveryDate')->get();
         if ($orders->first()){
+            //if any order with deliveryDate not define exists
             return view('sentOrders',['orders' => $orders]);
         }
         return view('sentOrders',['orders' => null]);

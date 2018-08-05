@@ -17,7 +17,7 @@ class CustomerMiddleware
     {
         if ($request->user() && $request->user()->type != 'customer' && $request->user()->type !='member')
         {
-            return redirect('home');
+            return redirect('/');
         }
         if (!$request->user()){
             return redirect('login');

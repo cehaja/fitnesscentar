@@ -10,7 +10,7 @@
         </ul>
     </div>
 
-    <form id="form" action="{{route('attendance')}}" method="post" enctype="multipart/form-data">
+    <form id="form" method="post">
         {{ csrf_field() }}
 
         <div class="form-group col-md-5">

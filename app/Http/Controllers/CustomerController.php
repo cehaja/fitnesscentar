@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Address;
+use App\Attendance;
 use App\Country;
 use App\Item;
 use App\Membership;
@@ -26,17 +27,22 @@ class CustomerController extends Controller
 
     public function orderItem($id, $quantity)
     {
+        //find selected item
         $item = Item::find($id);
+        //find active order
         $activeOrder = Order::where('userID', Auth::user()->id)->whereNull('orderDate')->get();
+        //if active order exists
         if ($activeOrder->first()) {
             $unfinishedOrder = $activeOrder[0];
         } else {
+            //else create new order
             $unfinishedOrder = new Order();
             $unfinishedOrder->userID = Auth::user()->id;
         }
         $unfinishedOrder->save();
         $orderItems = OrderItem::where('orderID', $unfinishedOrder->id)->get();
         foreach ($orderItems as $orderItem) {
+            //if items on order = selected item
             if ($orderItem->itemID == $id) {
                 $orderItem->quantity = $orderItem->quantity + $quantity;
                 $orderItem->save();
@@ -75,8 +81,10 @@ class CustomerController extends Controller
     public function currentOrder()
     {
         $activeOrder = Order::whereNull('orderDate')->where('userID', Auth::user()->id)->get();
+        //if active order exists
         if ($activeOrder->first()) {
             $orderItems = OrderItem::where('orderID', $activeOrder[0]->id)->get();
+            //if order has any items
             if ($orderItems->first())
                 return view('currentOrder', ['orderItems' => $orderItems]);
         }
@@ -87,6 +95,7 @@ class CustomerController extends Controller
     {
         $addresses = Address::where('userID', Auth::user()->id)->get();
         $countries = Country::all();
+        //if user has any addresses
         if ($addresses->first()) {
 
             return view('chooseAddress', ['addresses' => $addresses, 'countries' => $countries]);
@@ -102,9 +111,10 @@ class CustomerController extends Controller
             'zip' => 'numeric|required',
             'country' => 'required|exists:countries,id'
         ]);
-
+        //find active order
         $_order = Order::whereNull('orderDate')->where('userID', Auth::user()->id)->get();
         $order = $_order[0];
+        //add new address
         $address = new Address();
         $address->userID = Auth::user()->id;
         $address->countryID = $request->country;
@@ -114,12 +124,15 @@ class CustomerController extends Controller
         $address->save();
         $order->addressID = $address->id;
         $order->save();
+        //redirect to paypal
         return Redirect::route('pay', ['id' => $order->id]);
     }
 
     public function checkout(Request $request){
+        //find active order
         $_order = Order::whereNull('orderDate')->where('userID', Auth::user()->id)->get();
         $order = $_order[0];
+        //change order address to selected address
         $order->addressID = $request->address;
         $order->save();
         return Redirect::route('pay',['id' => $order->id]);
@@ -127,7 +140,9 @@ class CustomerController extends Controller
 
     public function profileDetails()
     {
+        //get current user
         $user = Auth::user();
+        //if user type = member
         if (Auth::user()->type == 'member') {
             $memberships = Membership::where('userID', Auth::user()->id)->orderBy('endDate', 'desc')->get();
             $activeMembership = $memberships[0];
@@ -143,6 +158,7 @@ class CustomerController extends Controller
             'lastName' => ['string', 'required', 'min:3', 'max:25', new LettersOnly()],
             'birthDate' => 'date|required|before:today'
         ]);
+        //update profile
         $user = Auth::user();
         $user->firstName = $request->firstName;
         $user->lastName = $request->lastName;
@@ -157,7 +173,7 @@ class CustomerController extends Controller
             'oldPassword' => ['required',new PasswordMatch()],
             'password' => 'required|min:6|string|confirmed'
         ]);
-
+        //set new password
         $user = Auth::user();
         $user->password = Hash::make($request->password);
         $user->save();
@@ -166,10 +182,25 @@ class CustomerController extends Controller
 
     public function completedOrders(){
         $orders = Order::where('userID',Auth::user()->id)->get();
+        //if there are any completed orders
         if ($orders->first()){
             return view('completedOrders' , ['orders' => $orders]);
         }
         return view('completedOrders',['orders' => null]);
+    }
+
+    public function deleteOrderItem($id){
+        $orderItem = OrderItem::find($id);
+        $orderItem->delete();
+        return redirect('order');
+    }
+    public function attendance(){
+        $user = Auth::user();
+        $attendances = Attendance::where('userID',$user->id)->get();
+        if ($attendances->first()){
+            return view('memberAttendance',['attendances' => $attendances]);
+        }
+        return view('memberAttendance',['attendances' => null]);
     }
 
 }

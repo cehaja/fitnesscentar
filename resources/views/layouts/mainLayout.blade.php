@@ -105,7 +105,7 @@
                                     <div>Completed orders</div>
                                 </a>
                                 @if(\Illuminate\Support\Facades\Auth::user()->type == 'member')
-                                    <a>
+                                    <a class="btn btn-link" href="{{route('memberAttendance')}}">
                                         <div>Attendance</div>
                                     </a>
                                 @endif
